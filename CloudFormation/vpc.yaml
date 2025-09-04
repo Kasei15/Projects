@@ -1,0 +1,260 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+########### Template Description ###############
+Description: Test for a VPC deployment via cloudformation
+
+############ Parameters for Configuration #############
+Parameters:
+  #First Az
+  Az1:
+    Description: Availability Zone-1 for Subnets
+    Type: String
+    Default: us-east-1a
+
+  #Second Az
+  Az2:
+    Description: Availability Zone-2 for Subnets
+    Type: String
+    Default: us-east-1b
+
+  #Third Az
+  Az3:
+    Description: Availability Zone-3 for Subnets
+    Type: String
+    Default: us-east-1c
+
+Resources:
+  ############# VPC #################
+  StagingVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      Tags:
+        - Key: Environment
+          Value: Staging-Vpc
+
+  ########### Public Subnets ##########
+
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref Az1
+      VpcId: !Ref StagingVpc
+      CidrBlock: 10.0.1.0/24
+      Tags:
+        - Key: Name
+          Value: Public-Subnet-1
+
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref Az2
+      VpcId: !Ref StagingVpc
+      CidrBlock: 10.0.2.0/24
+      Tags:
+        - Key: Name
+          Value: Public-Subnet-2
+
+  PublicSubnet3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref Az3
+      VpcId: !Ref StagingVpc
+      CidrBlock: 10.0.3.0/24
+      Tags:
+        - Key: Name
+          Value: Public-Subnet-3
+
+  ########### Private Subnets ##########
+
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref Az1
+      VpcId: !Ref StagingVpc
+      CidrBlock: 10.0.11.0/24
+      Tags:
+        - Key: Name
+          Value: Private-Subnet-1
+
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref Az2
+      VpcId: !Ref StagingVpc
+      CidrBlock: 10.0.12.0/24
+      Tags:
+        - Key: Name
+          Value: Private-Subnet-2
+
+  PrivateSubnet3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref Az3
+      VpcId: !Ref StagingVpc
+      CidrBlock: 10.0.13.0/24
+      Tags:
+        - Key: Name
+          Value: Private-Subnet-3
+
+  ########## Data Subnets ############
+
+  DataSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref Az1
+      VpcId: !Ref StagingVpc
+      CidrBlock: 10.0.111.0/24
+      Tags:
+        - Key: Name
+          Value: Data-Subnet-1
+
+  DataSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref Az2
+      VpcId: !Ref StagingVpc
+      CidrBlock: 10.0.112.0/24
+      Tags:
+        - Key: Name
+          Value: Data-Subent-2
+
+  DataSubnet3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref Az3
+      VpcId: !Ref StagingVpc
+      CidrBlock: 10.0.113.0/24
+      Tags:
+        - Key: Name
+          Value: Data-Subnet-3
+
+  ########## Route Tables ##############
+
+  PublicRoutes:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref StagingVpc
+      Tags:
+        - Key: Name
+          Value: Public-Route
+
+  PrivateRoutes:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref StagingVpc
+      Tags:
+        - Key: Name
+          Value: Private-Route
+
+  DataRoutes:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref StagingVpc
+      Tags:
+        - Key: Name
+          Value: Data-Route
+
+  ############ Public Route Table Associations with respective Subnets #############
+
+  PublicRoute1Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PublicRoutes
+
+  PublicRoute2Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet2
+      RouteTableId: !Ref PublicRoutes
+
+  PublicRoute3Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet3
+      RouteTableId: !Ref PublicRoutes
+
+  ############ Private Route Table Associations with respective Subnets #############
+
+  PrivateRoute1Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref PrivateRoutes
+
+  PrivateRoute2Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      RouteTableId: !Ref PrivateRoutes
+
+  PrivateRoute3Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet3
+      RouteTableId: !Ref PrivateRoutes
+
+  ############ Data Route Table Associations with respective Subnets #############
+
+  DataRoute1Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref DataSubnet1
+      RouteTableId: !Ref DataRoutes
+
+  DataRoute2Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref DataSubnet2
+      RouteTableId: !Ref DataRoutes
+
+  DataRoute3Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref DataSubnet3
+      RouteTableId: !Ref DataRoutes
+
+  #############  Staging Vpc Internet Gateway #################
+
+  StagingVpcIgw:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: Staging-Vpc-Igw
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref StagingVpc
+      InternetGatewayId: !Ref StagingVpcIgw
+
+  ############# Public route to Internet ##########
+
+  PublicRouteToInternet:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PublicRoutes
+      DestinationCidrBlock: 10.0.1.0/24
+      GatewayId: !Ref StagingVpcIgw
+
+  ########### Staging Vpc Nat Gateway #################
+
+  StagingVpcNat:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      Tags:
+        - Value: Name
+          Key: Staging-Vpc-Nat
+  NatEip:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref StagingVpcNat
+
+  NatEipAssociation:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      AllocationId: !GetAtt NatEip.AllocationId
+      NetworkInterfaceId: !GetAtt NatEip.NetworkInterfaceId

@@ -258,3 +258,13 @@ Resources:
     Properties:
       AllocationId: !GetAtt NatEip.AllocationId
       NetworkInterfaceId: !GetAtt NatEip.NetworkInterfaceId
+Metadata:
+  AWS::Composer::Groups:
+    Group:
+      Label: Group
+      Members:
+        - NatEip
+    Group2:
+      Label: Group2
+      Members:
+        - PrivateSubnet3

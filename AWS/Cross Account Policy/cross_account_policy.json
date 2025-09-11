@@ -1,0 +1,31 @@
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Policy to allow cross account access to bucket for iam user",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::<user>"
+            },
+            "Action": [
+                "s3:ListBucket",
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::<bucket in other account>",
+                "arn:aws:s3:::<bucket in other account>/*"
+            ]
+        },
+        {
+            "Sid": "Allow use of key",
+            "Effect": "Allow",
+            "Action": [
+                "kms:GenerateDataKey"
+            ],
+            "Resource": "arn:aws:kms:<CMK>"
+        }
+    ]
+}

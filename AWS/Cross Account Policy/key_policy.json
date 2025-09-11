@@ -1,0 +1,16 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+{
+      "Sid": "allow use of",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::<user>"
+      },
+      "Action": [
+        "kms:GenerateDataKey"
+      ],
+      "Resource": "arn:aws:s3:::<bucket>"
+    }
+  ]
+}
